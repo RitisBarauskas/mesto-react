@@ -1,32 +1,14 @@
 import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
 
 function App() {
   return (
     <div class="body">
       <div class="page">        
         <Header />
-        <main class="main">
-          <section class="profile">
-            <div class="profile__group">
-              <div class="profile__avatar">
-                <div class="profile__edit-avatar"></div>
-              </div>            
-              <div class="profile__info">
-                <h1 class="profile__title"></h1>
-                <button type="button" class="profile__edit-button"></button>
-                <p class="profile__subtitle"></p>
-              </div>
-            </div>
-            <button type="button" class="profile__add-button"></button>
-          </section>
-          <section class="places">
-            <ul class="places__list">            
-            </ul>
-          </section>
-        </main>
-        <footer class="footer">
-          <p class="footer__copyright">&copy; 2021 Mesto Russia</p>
-        </footer>
+        <Main />        
+        <Footer />
         <div class="popup popup_edit-profile">
           <div class="popup__container">
             <h2 class="popup__title">
