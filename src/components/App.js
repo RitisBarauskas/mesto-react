@@ -1,17 +1,33 @@
+import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import api from '../utils/api';
 
 function App() {
+    const [data, setData] = useState([]);
+    const [card, setCard] = useState(null);
+    useEffect(() => {
+        api.getDataCard().then(data => {
+            setData(data);
+        }).catch((err) => console.log(err));
+
+    }, [])
+    
+    const onCardClick = card => setCard(card);
+    const onClose = () => setCard(null);
+
   return (
     <div class="body">
       <div class="page">        
         <Header />
-        <Main />        
+        <Main cards={data} onCardClick={onCardClick} />        
         <Footer />          
       </div>
+      <ImagePopup card={card} onClose={onClose} />
+      {/* <PopupWithForm /> */}
       <div class="popup popup_edit-profile">
             <div class="popup__container">
                 <h2 class="popup__title">
@@ -64,14 +80,6 @@ function App() {
                 </form>
                 <button type="button" class="popup__close"></button>
             </div>             
-        </div>
-        <div class="popup popup_view-pic">               
-            <div class="popup__container popup__container_view-pic">
-                <h2 class="popup__title popup__title_view-pic">
-                </h2>
-                <img src="#" alt="#" class="popup__image" />
-                <button type="button" class="popup__close"></button>
-            </div>
         </div>
         <div class="popup popup_delete-card">               
             <div class="popup__container popup__container_delete-card">
