@@ -22,7 +22,12 @@ function App() {
     }, [])
     
     const onCardClick = card => setCard(card);
-    const onClose = () => setCard(null);
+    const closeAllPopups = () => {
+        setCard(false);
+        setAddPlacePopupOpen(false);
+        setEditAvatarPopupOpen(false);
+        setEditProfilePopupOpen(false);
+    };
 
     const handleEditAvatarClick = () => {
         setEditAvatarPopupOpen(true);
@@ -50,12 +55,13 @@ function App() {
         />        
         <Footer />          
       </div>
-      <ImagePopup card={card} onClose={onClose} />
+      <ImagePopup card={card} onClose={closeAllPopups} />
       <PopupWithForm 
         isOpen={isEditAvatarPopupOpen} 
         name="edit-avatar"
         nameButton="Сохранить"
         title="Обновить аватар"
+        onClose={closeAllPopups}
       >
         <label className="popup__label">
             <input className="popup__input" id="link-input" type="url" name="linkAvatar" value="" placeholder="Ссылка на аватар" required />
@@ -67,6 +73,7 @@ function App() {
         name="new-card"
         nameButton="Создать"
         title="Новое место"
+        onClose={closeAllPopups}
       >
         <label className="popup__label">
             <input className="popup__input" id="place-input" type="text" name="name" value="" placeholder="Название" required minlength="2" maxlength="30" />
@@ -82,6 +89,7 @@ function App() {
         name="edit-profile"
         nameButton="Сохранить"
         title="Редактировать профиль"
+        onClose={closeAllPopups}
       >
         <label className="popup__label">
             <input className="popup__input" id="name-input" type="text" name="title" value="" placeholder="Имя" required maxlength="40" minlength="2" />
@@ -96,6 +104,7 @@ function App() {
         name="delete-card"
         nameButton="Да"
         title="Вы уверены?"
+        onClose={closeAllPopups}
       >
         <input type="hidden" value="" id="id-card" />
       </PopupWithForm>
