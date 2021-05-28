@@ -7,11 +7,16 @@ import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 
 function App() {
-    const [data, setData] = useState([]);
-    const [card, setCard] = useState(null);
-    useEffect(() => {
-        api.getDataCard().then(data => {
-            setData(data);
+    const [data, setData] = React.useState([]);
+    const [card, setCard] = React.useState(false);
+    const [profile, setProfile] = React.useState([]);
+    const [isEditProfilePopupOpen, setFormProfile] = React.useState(false);
+    const [isAddPlacePopupOpen, setAddCard] = React.useState(false);
+    const [isEditAvatarPopupOpen, setAvatar] = React.useState(false);
+    React.useEffect(() => {
+        api.getInitialData().then(data => {
+            setData(data[0]);
+            setProfile(data[1]);
         }).catch((err) => console.log(err));
 
     }, [])
@@ -19,11 +24,36 @@ function App() {
     const onCardClick = card => setCard(card);
     const onClose = () => setCard(null);
 
+    const handleEditAvatarClick = () => {
+        console.log('hi');
+        const popup = document.querySelector('.popup_edit-avatar');
+        popup.classList.add('popup_opened');
+    }
+
+    const handleEditProfileClick = () => {
+        console.log('hi');
+        const popup = document.querySelector('.popup_edit-profile');
+        popup.classList.add('popup_opened');
+    }
+
+    const handleAddPlaceClick = () => {
+        console.log('hi');
+        const popup = document.querySelector('.popup_new-card');
+        popup.classList.add('popup_opened');
+    }
+
   return (
     <div class="body">
       <div class="page">        
         <Header />
-        <Main cards={data} onCardClick={onCardClick} />        
+        <Main 
+            cards={data}
+            onCardClick={onCardClick} 
+            profile={profile}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+        />        
         <Footer />          
       </div>
       <ImagePopup card={card} onClose={onClose} />
