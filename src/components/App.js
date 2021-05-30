@@ -1,54 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import api from '../utils/api';
+
 
 function App() {
-    const [data, setData] = React.useState([]);
-    const [selectedCard, setCard] = React.useState(false);
-    const [profile, setProfile] = React.useState([]);
-    const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
-    const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-    const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-    React.useEffect(() => {
-        api.getInitialData().then(data => {
-            setData(data[0]);
-            setProfile(data[1]);
-        }).catch((err) => console.log(err));
-
-    }, [])
+    const [selectedCard, setSelectedCard] = React.useState(false);
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     
-    const handleCardClick = (card) => setCard(card);
+    const handleCardClick = (card) => setSelectedCard(card);
     const closeAllPopups = () => {
-        setCard(false);
-        setAddPlacePopupOpen(false);
-        setEditAvatarPopupOpen(false);
-        setEditProfilePopupOpen(false);
+        setSelectedCard({name: '', link: ''});
+        setIsAddPlacePopupOpen(false);
+        setIsEditAvatarPopupOpen(false);
+        setIsEditProfilePopupOpen(false);
     };
 
     const handleEditAvatarClick = () => {
-        setEditAvatarPopupOpen(true);
+        setIsEditAvatarPopupOpen(true);
     }
 
     const handleEditProfileClick = () => {
-        setEditProfilePopupOpen(true);
+        setIsEditProfilePopupOpen(true);
     }
 
     const handleAddPlaceClick = () => {
-        setAddPlacePopupOpen(true);
+        setIsAddPlacePopupOpen(true);
     }
 
   return (
     <div className="body">
       <div className="page">        
         <Header />
-        <Main 
-            cards={data}
-            onCardClick={handleCardClick} 
-            profile={profile}
+        <Main
+            onCardClick={handleCardClick}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onEditAvatar={handleEditAvatarClick}
@@ -105,9 +94,7 @@ function App() {
         nameButton="Да"
         title="Вы уверены?"
         onClose={closeAllPopups}
-      >
-        <input type="hidden" value="" id="id-card" />
-      </PopupWithForm>
+      />
     </div>
   );
 }
