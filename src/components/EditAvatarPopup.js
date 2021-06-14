@@ -5,7 +5,6 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
     const avatarRef = React.useRef();
     const submitButton = isLoading ? 'Обновление...' : 'Обновить';
 
-
     React.useEffect(() => {
         avatarRef.current.value = '';
     }, [isOpen]);

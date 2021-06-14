@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
+import DeleteCardPopup from "./DeleteCardPopup";
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -14,14 +14,18 @@ import AddPlacePopup from "./AddPlacePopup";
 function App() {
     const [selectedCard, setSelectedCard] = React.useState({name: '', link: ''});
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+    const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState({})
     const [cards, setCards] = React.useState([]);
     const [isLoading, setLoading] = React.useState(false);
+    const [cardDelete, setCardDelete] = React.useState({});
+
     React.useEffect(() => {
-        api.getDataCard().then((cards) => {
+        api.getInitialData().then(([cards, userData]) => {
             setCards(cards);
+            setCurrentUser(userData);
         }).catch((err) => console.log(err));
 
     }, [])
@@ -33,30 +37,32 @@ function App() {
                 setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
             });
     }
-
+    const handleCardDeleteClick = (card) => {
+        setIsDeleteCardPopupOpen(true);
+        setCardDelete(card);
+    }
     const handleCardDelete = (card) => {
+        setLoading(true)
         api.deleteCard(card._id)
             .then(() => {
                 const newCards = cards.filter(function (deleteCard) {
                     return card !== deleteCard;
                 });
                 setCards(newCards);
-            });
+                closeAllPopups();
+            })
+            .catch((err) => console.log(err))
+            .finally(() => setLoading(false));
     }
-
-    React.useEffect(() => {
-        api.getUserInfo().then((userData) => {
-            setCurrentUser(userData);
-        }).catch((err) => console.log(err));
-
-    }, [])
     
     const handleCardClick = (card) => setSelectedCard(card);
+
     const closeAllPopups = () => {
         setSelectedCard({name: '', link: ''});
         setIsAddPlacePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
         setIsEditProfilePopupOpen(false);
+        setIsDeleteCardPopupOpen(false);
     };
 
     const handleEditAvatarClick = () => {
@@ -116,7 +122,7 @@ function App() {
                 onEditAvatar={handleEditAvatarClick}
                 cards={cards}
                 onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
+                onCardDelete={handleCardDeleteClick}
             />
             <Footer />
           </div>
@@ -142,12 +148,13 @@ function App() {
                 onAddPlace={handleAddPlaceSubmit}
                 isLoading={isLoading}
             />
-              <PopupWithForm
-                name="delete-card"
-                nameButton="Да"
-                title="Вы уверены?"
+            <DeleteCardPopup
+                isOpen={isDeleteCardPopupOpen}
                 onClose={closeAllPopups}
-              />
+                onDeleteCard={handleCardDelete}
+                isLoading={isLoading}
+                card={cardDelete}
+            />
         </div>
       </CurrentUserContext.Provider>
       );
