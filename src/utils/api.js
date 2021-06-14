@@ -31,20 +31,18 @@ class Api {
         .then(this._checkResponse);
     }
 
-    addLike(id) {
+    changeLikeCardStatus(id, status) {
+        if (status) {
+            this._methodCard = 'PUT'
+        }
+        else {
+            this._methodCard = 'DELETE'
+        }
         return fetch(this._url+`cards/likes/${id}`, {
-            method: 'PUT',
+            method: this._methodCard,
             headers: this._headers
         })
-        .then(this._checkResponse);
-    }
-
-    deleteLike(id) {
-        return fetch(this._url+`cards/likes/${id}`, {
-            method: 'DELETE',
-            headers: this._headers
-        })
-        .then(this._checkResponse);
+            .then(this._checkResponse);
     }
 
     getUserInfo() {
