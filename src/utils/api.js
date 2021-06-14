@@ -12,7 +12,7 @@ class Api {
     }
 
     getInitialData() {
-        return Promise.all([this.getDataCard(), this.getUser()])
+        return Promise.all([this.getDataCard(), this.getUserInfo()])
     }
 
     getDataCard() {
@@ -47,7 +47,7 @@ class Api {
         .then(this._checkResponse);
     }
 
-    getUser() {
+    getUserInfo() {
         return fetch(this._url+`users/me`, {
             method: 'GET',
             headers: this._headers
