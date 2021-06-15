@@ -5,23 +5,49 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
     const currentUser = React.useContext(CurrentUserContext);
     const submitButton = isLoading ? 'Обновление...' : 'Редактировать';
-    const [name, setName] = React.useState('');
-    const [description, setDescription] = React.useState('');
+    const [nameInput, setNameInput] = React.useState({
+        value: '',
+        isValid: true,
+        validMessage: ''
+    });
+    const [descriptionInput, setDescriptionInput] = React.useState({
+        value: '',
+        isValid: true,
+        validMessage: ''
+    });
     React.useEffect(() => {
-        setName(currentUser.name);
-        setDescription(currentUser.about);
+        setNameInput({
+            value: currentUser.name,
+            isValid: false,
+            validMessage: ''
+        });
+        setDescriptionInput({
+            value: currentUser.about,
+            isValid: false,
+            validMessage: ''
+        });
     }, [currentUser, isOpen]);
 
     const handleNameChange = (evt) => {
-        setName(evt.target.value);
+        setNameInput({
+            value: evt.target.value,
+            validMessage: evt.target.validationMessage,
+            isValid: (evt.target.validationMessage ? true : false)
+        });
     }
 
     const handleDescriptionChange = (evt) => {
-        setDescription(evt.target.value);
+        setDescriptionInput({
+            value: evt.target.value,
+            validMessage: evt.target.validationMessage,
+            isValid: (evt.target.validationMessage ? true : false)
+        });
     }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
+        const name = nameInput.value;
+        const description = descriptionInput.value;
 
         onUpdateUser({
             name,
@@ -37,6 +63,7 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
             title="Редактировать профиль"
             onClose={onClose}
             onSubmit={handleSubmit}
+            submitDisabled={(nameInput.isValid || descriptionInput.isValid)}
         >
             <label className="popup__label">
                 <input
@@ -44,14 +71,14 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
                     id="name-input"
                     type="text"
                     name="title"
-                    defaultValue={name}
+                    value={nameInput.value || ''}
                     placeholder="Имя"
                     required
                     maxLength="40"
                     minLength="2"
                     onChange={handleNameChange}
                 />
-                <span className="name-input-error"></span>
+                <span className="name-input-error popup__error popup__error_visible">{nameInput.validMessage}</span>
             </label>
             <label className="popup__label">
                 <input
@@ -59,14 +86,14 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
                     id="profession-input"
                     type="text"
                     name="subtitle"
-                    defaultValue={description}
+                    defaultValue={descriptionInput.value || ''}
                     placeholder="Профессия"
                     required
                     minLength="2"
                     maxLength="200"
                     onChange={handleDescriptionChange}
                 />
-                <span className="profession-input-error"></span>
+                <span className="profession-input-error popup__error popup__error_visible">{descriptionInput.validMessage}</span>
             </label>
         </PopupWithForm>
     )

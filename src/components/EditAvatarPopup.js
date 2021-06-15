@@ -3,10 +3,14 @@ import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
     const avatarRef = React.useRef();
+    const [isValid, setIsValid] = React.useState(true);
+    const [validMessage, setValidMessage] = React.useState('')
     const submitButton = isLoading ? 'Обновление...' : 'Обновить';
 
     React.useEffect(() => {
         avatarRef.current.value = '';
+        setIsValid(true);
+        setValidMessage('');
     }, [isOpen]);
 
     const handleSubmit = (evt) => {
@@ -14,6 +18,11 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
         onUpdateAvatar({
             avatar: avatarRef.current.value,
         });
+    }
+
+    const handleChangeLink = (evt) => {
+        setValidMessage(evt.target.validationMessage);
+        setIsValid(evt.target.validationMessage ? true : false);
     }
 
     return (
@@ -25,6 +34,7 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
             onClose={onClose}
             onSubmit={handleSubmit}
             buttonTitle={submitButton}
+            submitDisabled={isValid}
         >
             <label className="popup__label">
                 <input
@@ -32,12 +42,13 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
                     id="link-input"
                     type="url"
                     name="linkAvatar"
-                    defaultValue=''
+                    defaultValue=""
                     placeholder="Ссылка на аватар"
                     required
                     ref={avatarRef}
+                    onChange={handleChangeLink}
                 />
-                <span className="link-input-error"></span>
+                <span className="link-input-error popup__error popup__error_visible">{validMessage}</span>
             </label>
         </PopupWithForm>
     )
