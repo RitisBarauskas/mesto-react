@@ -1,6 +1,7 @@
 # Mesto-react
-
 Проект Мето 2.0
+Полный аналог проекта: https://github.com/RitisBarauskas/mesto
+Переписан с использованием React.js
 
 ## Технологии
 
