@@ -3,14 +3,14 @@ import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
     const avatarRef = React.useRef();
-    const [isValid, setIsValid] = React.useState(true);
-    const [validMessage, setValidMessage] = React.useState('')
+    const [isValid, setIsValid] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('')
     const submitButton = isLoading ? 'Обновление...' : 'Обновить';
 
     React.useEffect(() => {
         avatarRef.current.value = '';
-        setIsValid(true);
-        setValidMessage('');
+        setIsValid(false);
+        setErrorMessage('');
     }, [isOpen]);
 
     const handleSubmit = (evt) => {
@@ -21,8 +21,8 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
     }
 
     const handleChangeLink = (evt) => {
-        setValidMessage(evt.target.validationMessage);
-        setIsValid(evt.target.validationMessage ? true : false);
+        setErrorMessage(evt.target.validationMessage);
+        setIsValid(evt.target.validationMessage ? false : true);
     }
 
     return (
@@ -34,7 +34,7 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
             onClose={onClose}
             onSubmit={handleSubmit}
             buttonTitle={submitButton}
-            submitDisabled={isValid}
+            submitDisabled={!isValid}
         >
             <label className="popup__label">
                 <input
@@ -48,7 +48,7 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoading}) {
                     ref={avatarRef}
                     onChange={handleChangeLink}
                 />
-                <span className="link-input-error popup__error popup__error_visible">{validMessage}</span>
+                <span className="link-input-error popup__error popup__error_visible">{errorMessage}</span>
             </label>
         </PopupWithForm>
     )

@@ -4,41 +4,41 @@ import PopupWithForm from "./PopupWithForm";
 function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) {
     const [nameInput, setNameInput] = React.useState({
         value: '',
-        validError: '',
-        isValid: true
+        errorMessage: '',
+        isValid: false
     });
     const [linkInput, setLinkInput] = React.useState({
         value: '',
-        validError: '',
-        isValid: true
+        errorMessage: '',
+        isValid: false
     });
     const submitButton = isLoading ? 'Сохранение...' : 'Создать';
     React.useEffect(() => {
         setNameInput({
             value: '',
-            validError: '',
-            isValid: true
+            errorMessage: '',
+            isValid: false
         });
         setLinkInput({
             value: '',
-            validError: '',
-            isValid: true
+            errorMessage: '',
+            isValid: false
         });
     }, [isOpen]);
 
     const handleNameChange = (evt) => {
         setNameInput({
             value: evt.target.value,
-            validError: evt.target.validationMessage,
-            isValid: (evt.target.validationMessage ? true : false)
+            errorMessage: evt.target.validationMessage,
+            isValid: (evt.target.validationMessage ? false : true)
         });
     }
 
     const handleLinkChange = (evt) => {
         setLinkInput({
             value: evt.target.value,
-            validError: evt.target.validationMessage,
-            isValid: (evt.target.validationMessage ? true : false)
+            errorMessage: evt.target.validationMessage,
+            isValid: (evt.target.validationMessage ? false : true)
         });
     }
 
@@ -56,7 +56,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) {
             title="Новое место"
             onClose={onClose}
             onSubmit={handleSubmit}
-            submitDisabled={(linkInput.isValid || nameInput.isValid)}
+            submitDisabled={(!linkInput.isValid || !nameInput.isValid)}
         >
             <label className="popup__label">
                 <input
@@ -71,7 +71,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) {
                     maxLength="30"
                     onChange={handleNameChange}
                 />
-                <span className="place-input-error popup__error popup__error_visible">{nameInput.validError}</span>
+                <span className="place-input-error popup__error popup__error_visible">{nameInput.errorMessage}</span>
             </label>
             <label className="popup__label">
                 <input
@@ -84,7 +84,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) {
                     required
                     onChange={handleLinkChange}
                 />
-                <span className="url-input-error popup__error popup__error_visible">{linkInput.validError}</span>
+                <span className="url-input-error popup__error popup__error_visible">{linkInput.errorMessage}</span>
             </label>
         </PopupWithForm>
     )
